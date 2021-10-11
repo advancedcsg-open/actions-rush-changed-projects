@@ -1076,8 +1076,6 @@ exports.realpath = function realpath(p, cache, cb) {
 /***/ 625:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
-exports.alphasort = alphasort
-exports.alphasorti = alphasorti
 exports.setopts = setopts
 exports.ownProp = ownProp
 exports.makeAbs = makeAbs
@@ -1090,17 +1088,14 @@ function ownProp (obj, field) {
   return Object.prototype.hasOwnProperty.call(obj, field)
 }
 
+var fs = __nccwpck_require__(747)
 var path = __nccwpck_require__(622)
 var minimatch = __nccwpck_require__(973)
 var isAbsolute = __nccwpck_require__(714)
 var Minimatch = minimatch.Minimatch
 
-function alphasorti (a, b) {
-  return a.toLowerCase().localeCompare(b.toLowerCase())
-}
-
 function alphasort (a, b) {
-  return a.localeCompare(b)
+  return a.localeCompare(b, 'en')
 }
 
 function setupIgnores (self, options) {
@@ -1159,6 +1154,7 @@ function setopts (self, pattern, options) {
   self.stat = !!options.stat
   self.noprocess = !!options.noprocess
   self.absolute = !!options.absolute
+  self.fs = options.fs || fs
 
   self.maxLength = options.maxLength || Infinity
   self.cache = options.cache || Object.create(null)
@@ -1228,7 +1224,7 @@ function finish (self) {
     all = Object.keys(all)
 
   if (!self.nosort)
-    all = all.sort(self.nocase ? alphasorti : alphasort)
+    all = all.sort(alphasort)
 
   // at *some* point we statted all of these
   if (self.mark) {
@@ -1365,7 +1361,6 @@ function childrenIgnored (self, path) {
 
 module.exports = glob
 
-var fs = __nccwpck_require__(747)
 var rp = __nccwpck_require__(863)
 var minimatch = __nccwpck_require__(973)
 var Minimatch = minimatch.Minimatch
@@ -1376,8 +1371,6 @@ var assert = __nccwpck_require__(357)
 var isAbsolute = __nccwpck_require__(714)
 var globSync = __nccwpck_require__(10)
 var common = __nccwpck_require__(625)
-var alphasort = common.alphasort
-var alphasorti = common.alphasorti
 var setopts = common.setopts
 var ownProp = common.ownProp
 var inflight = __nccwpck_require__(492)
@@ -1828,7 +1821,7 @@ Glob.prototype._readdirInGlobStar = function (abs, cb) {
   var lstatcb = inflight(lstatkey, lstatcb_)
 
   if (lstatcb)
-    fs.lstat(abs, lstatcb)
+    self.fs.lstat(abs, lstatcb)
 
   function lstatcb_ (er, lstat) {
     if (er && er.code === 'ENOENT')
@@ -1869,7 +1862,7 @@ Glob.prototype._readdir = function (abs, inGlobStar, cb) {
   }
 
   var self = this
-  fs.readdir(abs, readdirCb(this, abs, cb))
+  self.fs.readdir(abs, readdirCb(this, abs, cb))
 }
 
 function readdirCb (self, abs, cb) {
@@ -2073,13 +2066,13 @@ Glob.prototype._stat = function (f, cb) {
   var self = this
   var statcb = inflight('stat\0' + abs, lstatcb_)
   if (statcb)
-    fs.lstat(abs, statcb)
+    self.fs.lstat(abs, statcb)
 
   function lstatcb_ (er, lstat) {
     if (lstat && lstat.isSymbolicLink()) {
       // If it's a symlink, then treat it as the target, unless
       // the target does not exist, then treat it as a file.
-      return fs.stat(abs, function (er, stat) {
+      return self.fs.stat(abs, function (er, stat) {
         if (er)
           self._stat2(f, abs, null, lstat, cb)
         else
@@ -2123,7 +2116,6 @@ Glob.prototype._stat2 = function (f, abs, er, stat, cb) {
 module.exports = globSync
 globSync.GlobSync = GlobSync
 
-var fs = __nccwpck_require__(747)
 var rp = __nccwpck_require__(863)
 var minimatch = __nccwpck_require__(973)
 var Minimatch = minimatch.Minimatch
@@ -2133,8 +2125,6 @@ var path = __nccwpck_require__(622)
 var assert = __nccwpck_require__(357)
 var isAbsolute = __nccwpck_require__(714)
 var common = __nccwpck_require__(625)
-var alphasort = common.alphasort
-var alphasorti = common.alphasorti
 var setopts = common.setopts
 var ownProp = common.ownProp
 var childrenIgnored = common.childrenIgnored
@@ -2370,7 +2360,7 @@ GlobSync.prototype._readdirInGlobStar = function (abs) {
   var lstat
   var stat
   try {
-    lstat = fs.lstatSync(abs)
+    lstat = this.fs.lstatSync(abs)
   } catch (er) {
     if (er.code === 'ENOENT') {
       // lstat failed, doesn't exist
@@ -2407,7 +2397,7 @@ GlobSync.prototype._readdir = function (abs, inGlobStar) {
   }
 
   try {
-    return this._readdirEntries(abs, fs.readdirSync(abs))
+    return this._readdirEntries(abs, this.fs.readdirSync(abs))
   } catch (er) {
     this._readdirError(abs, er)
     return null
@@ -2566,7 +2556,7 @@ GlobSync.prototype._stat = function (f) {
   if (!stat) {
     var lstat
     try {
-      lstat = fs.lstatSync(abs)
+      lstat = this.fs.lstatSync(abs)
     } catch (er) {
       if (er && (er.code === 'ENOENT' || er.code === 'ENOTDIR')) {
         this.statCache[abs] = false
@@ -2576,7 +2566,7 @@ GlobSync.prototype._stat = function (f) {
 
     if (lstat && lstat.isSymbolicLink()) {
       try {
-        stat = fs.statSync(abs)
+        stat = this.fs.statSync(abs)
       } catch (er) {
         stat = lstat
       }
@@ -3831,7 +3821,7 @@ async function run () {
   try {
     const changedProjectsArray = await changedProjects()
 
-    core.setOutput('changed-projects', JSON.stringify(changedProjectsArray))
+    core.setOutput('changed-projects', `'${JSON.stringify(changedProjectsArray)}'`)
   } catch (error) {
     core.setFailed(error.message)
   }
