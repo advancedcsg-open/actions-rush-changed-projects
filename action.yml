@@ -7,11 +7,6 @@ runs:
 branding:
   icon: 'check'
   color: 'gray-dark'
-inputs:
-  milliseconds:  # id of input
-    description: 'number of milliseconds to wait'
-    required: true
-    default: '1000'
 outputs:
   changed-projects: # output will be available to future steps
     description: 'List of the changed projects. Contains the packageName of each project'
