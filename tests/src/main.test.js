@@ -19,7 +19,7 @@ describe('test runs', () => {
 
     const result = cp.execSync(`node ${action}`, { env: process.env }).toString()
     const results = result.trim().split(/\r\n|\r|\n/) // split on new line
-    expect(results).toContain('::set-output name=changed-projects::[]')
+    expect(results).toContain("::set-output name=changed-projects::'[]'")
   })
 
   it('test action - no changes', async () => {
@@ -29,7 +29,7 @@ describe('test runs', () => {
     await require('../../src/main')
 
     console.log(actionsCore.setOutput)
-    expect(actionsCore.setOutput).toHaveBeenCalledWith('changed-projects', '[]')
+    expect(actionsCore.setOutput).toHaveBeenCalledWith('changed-projects', "'[]'")
   })
 
   it('test action - with changes', async () => {
@@ -43,7 +43,7 @@ describe('test runs', () => {
 
     await require('../../src/main')
 
-    expect(actionsCore.setOutput).toHaveBeenCalledWith('changed-projects', JSON.stringify(changes))
+    expect(actionsCore.setOutput).toHaveBeenCalledWith('changed-projects', `'${JSON.stringify(changes)}'`)
   })
 
   it('test action - failed', async () => {
