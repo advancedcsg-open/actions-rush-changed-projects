@@ -1,0 +1,17 @@
+name: 'RushJS Identify Changed Projects Helper'
+author: Paul Mowat
+description: 'Github action for detecting changed projects using rush change files'
+runs:
+  using: 'node14'
+  main: 'dist/main/index.js'
+branding:
+  icon: 'check'
+  color: 'gray-dark'
+inputs:
+  milliseconds:  # id of input
+    description: 'number of milliseconds to wait'
+    required: true
+    default: '1000'
+outputs:
+  changed-projects: # output will be available to future steps
+    description: 'List of the changed projects. Contains the packageName of each project'
