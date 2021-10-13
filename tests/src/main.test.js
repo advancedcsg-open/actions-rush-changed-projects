@@ -17,7 +17,7 @@ describe('test runs', () => {
   it('test action executes', async () => {
     const action = join(process.cwd(), 'src', 'main.js')
 
-    const result = cp.execSync(`node ${action}`, { env: process.env }).toString()
+    const result = cp.execSync(`node ${action}`, { env: process.env, shell: false }).toString()
     const results = result.trim().split(/\r\n|\r|\n/) // split on new line
     expect(results).toContain("::set-output name=changed-projects::'[]'")
   })
