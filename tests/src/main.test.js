@@ -84,14 +84,4 @@ describe('test runs', () => {
 
     expect(actionsCore.setFailed).toHaveBeenCalledWith(`Cannot detect rush.json file at ${noRushPath}`)
   })
-
-  it('test action executes - default', async () => {
-    const fixturePath = join(__dirname, '..', 'fixtures')
-
-    const action = join(process.cwd(), 'src', 'main.js')
-
-    const result = cp.execSync(`node ${action}`, { env: process.env, shell: false, cwd: fixturePath })
-    const results = result.toString().trim().split(/\r\n|\r|\n/) // split on new line
-    expect(results).toContain("::set-output name=changed-projects::'[\"@advanced/example-1\",\"@advanced/example-2\",\"@advanced/example-3\"]'")
-  })
 })
