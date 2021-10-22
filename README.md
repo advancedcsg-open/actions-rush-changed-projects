@@ -15,6 +15,13 @@ Used to in combination with `rush change` files to detect changes.
 ---
 This action requires rush version 5.47.0 or newer.
 
+### Inputs
+---
+#### `exclude-dependant-projects`
+Determines whether to exclude projects that depend on projects identified via `rush change`. A boolean value of `true` or `false`.
+
+By default this is set to `false` and dependant projects are included.
+
 ### Outputs
 ---
 #### `changed-projects`

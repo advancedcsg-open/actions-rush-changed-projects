@@ -1,21 +1,79 @@
 const { join } = require('path')
 const glob = require('glob')
-const { readFileSync } = require('fs')
+const { existsSync, promises: { readFile } } = require('fs')
+const stripJsonComments = require('./strip-json-comments')
 
-const getRushChangePath = () => {
-  return join('common', 'changes').replace(/\\/g, '/')
+const readJsonFile = async (filePath) => {
+  const content = await readFile(filePath, 'utf8')
+  return JSON.parse(stripJsonComments(content))
 }
 
-const getRushChangeFiles = (changeFilesPath) => {
-  return glob.sync(`${changeFilesPath}/**/*.json`)
+const getPackagesFromChanges = async (rushChangePath) => {
+  const changeFiles = glob.sync(`${rushChangePath}/**/*.json`)
+
+  const changedPackages = []
+  for (const changeFilePath of changeFiles) {
+    const changeRequest = await readJsonFile(changeFilePath)
+    if (!changedPackages.includes(changeRequest.packageName)) {
+      changedPackages.push(changeRequest.packageName)
+    }
+  }
+  return changedPackages
 }
 
-const readChangeFile = (changeFilePath) => {
-  return JSON.parse(readFileSync(changeFilePath, 'utf8'))
+const getPackagesPaths = async (rushRootPath) => {
+  const rushJsonPath = join(rushRootPath, 'rush.json')
+
+  if (!existsSync(rushJsonPath)) {
+    throw new Error(`Cannot detect rush.json file at ${rushRootPath}`)
+  }
+
+  const rushJson = await readJsonFile(join(rushRootPath, 'rush.json'))
+
+  const paths = []
+  for (const project of rushJson.projects) {
+    paths.push({
+      packageName: project.packageName,
+      packagePath: join(rushRootPath, project.projectFolder)
+    })
+  }
+  return paths
+}
+
+const getAllChanges = async ({ rushChangePath, packagePaths, options = {} }) => {
+  // Identify changed packages from change logs
+  const changedPackages = await getPackagesFromChanges(rushChangePath)
+
+  // Start off with the changed packages
+  const allChanges = [...changedPackages]
+
+  // Exclude the dependant projects if specified. By default we include them
+  if ((!options.excludeDependantProjects) || (options.excludeDependantProjects && options.excludeDependantProjects !== 'true')) {
+    // Check through all rush packages
+    for (const { packageName, packagePath } of packagePaths) {
+      // Read the package.json
+      const packageJsonPath = join(packagePath, 'package.json')
+      const packageJsonContent = await readJsonFile(packageJsonPath)
+
+      // Build up a list of all the package dependencies
+      const prodDependencies = (packageJsonContent.dependencies) ? Object.keys(packageJsonContent.dependencies) : []
+      const devDependencies = (packageJsonContent.devDependencies) ? Object.keys(packageJsonContent.devDependencies) : []
+      const allDependencies = [...prodDependencies, ...devDependencies]
+
+      // Check to see if any of the changedPackages are in the dependencies
+      if (allDependencies.some((dependencyName) => changedPackages.includes(dependencyName))) {
+        if (!allChanges.includes(packageName)) {
+          allChanges.push(packageName)
+        }
+      }
+    }
+  }
+  return allChanges
 }
 
 module.exports = {
-  getRushChangePath,
-  getRushChangeFiles,
-  readChangeFile
+  readJsonFile,
+  getPackagesFromChanges,
+  getPackagesPaths,
+  getAllChanges
 }
