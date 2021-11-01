@@ -61,10 +61,9 @@ const getAllChanges = async ({ rushChangePath, packagePaths, options = {} }) => 
       const allDependencies = [...prodDependencies, ...devDependencies]
 
       // Check to see if any of the changedPackages are in the dependencies
-      if (allDependencies.some((dependencyName) => changedPackages.includes(dependencyName))) {
-        if (!allChanges.includes(packageName)) {
-          allChanges.push(packageName)
-        }
+      const hasChangedPackage = allDependencies.some((dependencyName) => changedPackages.includes(dependencyName))
+      if (hasChangedPackage && !allChanges.includes(packageName)) {
+        allChanges.push(packageName)
       }
     }
   }
