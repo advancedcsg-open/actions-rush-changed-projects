@@ -1,10 +1,13 @@
 const core = require('@actions/core')
 
-const changedProjects = require('./libs/changed-projects')
+const changedProjects = require('./changed-projects')
 
 async function run () {
   try {
-    const changedProjectsArray = await changedProjects()
+    const options = {
+      excludeDependantProjects: core.getInput('exclude-dependant-projects')
+    }
+    const changedProjectsArray = await changedProjects(options)
 
     core.setOutput('changed-projects', `'${JSON.stringify(changedProjectsArray)}'`)
   } catch (error) {
@@ -12,4 +15,8 @@ async function run () {
   }
 }
 
-run()
+module.exports = run
+
+if (require.main === module) {
+  run()
+}

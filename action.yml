@@ -7,6 +7,11 @@ runs:
 branding:
   icon: 'check'
   color: 'gray-dark'
+inputs:
+  exclude-dependant-projects:
+    description: 'Exclude Dependant Projects'
+    required: false
+    default: false
 outputs:
   changed-projects: # output will be available to future steps
     description: 'List of the changed projects. Contains the packageName of each project'
