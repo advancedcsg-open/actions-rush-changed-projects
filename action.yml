@@ -12,6 +12,9 @@ inputs:
     description: 'Exclude Dependant Projects'
     required: false
     default: false
+  version-policy:
+    description: 'Version policy name'
+    required: false
 outputs:
   changed-projects: # output will be available to future steps
     description: 'List of the changed projects. Contains the packageName of each project'

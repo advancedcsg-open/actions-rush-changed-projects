@@ -2,10 +2,11 @@ const core = require('@actions/core')
 
 const changedProjects = require('./changed-projects')
 
-async function run () {
+async function run() {
   try {
     const options = {
-      excludeDependantProjects: core.getInput('exclude-dependant-projects')
+      excludeDependantProjects: core.getInput('exclude-dependant-projects'),
+      versionPolicy: core.getInput('version-policy')
     }
     const changedProjectsArray = await changedProjects(options)
 

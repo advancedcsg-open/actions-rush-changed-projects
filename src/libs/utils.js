@@ -34,7 +34,8 @@ const getPackagesPaths = async (rushRootPath) => {
   for (const project of rushJson.projects) {
     paths.push({
       packageName: project.packageName,
-      packagePath: join(rushRootPath, project.projectFolder)
+      packagePath: join(rushRootPath, project.projectFolder),
+      packageVersionPolicy: project.versionPolicyName
     })
   }
   return paths

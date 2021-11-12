@@ -23,6 +23,10 @@ Determines whether to exclude projects that depend on projects identified via `r
 
 By default this is set to `false` and dependant projects are included.
 
+#### `version-policy`
+Filters the projects using given version policy.
+
+By default all the changed projects will be included.
 ### Outputs
 ---
 #### `changed-projects`
