@@ -43,8 +43,12 @@ const getPackagesPaths = async (rushRootPath) => {
 
 const getAllChanges = async ({ rushChangePath, packagePaths, options = {} }) => {
   // Identify changed packages from change logs
-  const changedPackages = await getPackagesFromChanges(rushChangePath)
-
+  var changedPackages = await getPackagesFromChanges(rushChangePath)
+  // Filter projects by version policy
+  if (options.versionPolicy != undefined) {
+    const versionPolicyPackages = packagePaths.filter(project => project.packageVersionPolicy == options.versionPolicy).map(project => project.packageName)
+    changedPackages = changedPackages.filter(project => versionPolicyPackages.includes(project))
+  }
   // Start off with the changed packages
   const allChanges = [...changedPackages]
 
