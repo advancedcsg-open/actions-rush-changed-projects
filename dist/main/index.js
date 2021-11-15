@@ -5064,7 +5064,8 @@ const getPackagesPaths = async (rushRootPath) => {
   for (const project of rushJson.projects) {
     paths.push({
       packageName: project.packageName,
-      packagePath: join(rushRootPath, project.projectFolder)
+      packagePath: join(rushRootPath, project.projectFolder),
+      packageVersionPolicy: project.versionPolicyName
     })
   }
   return paths
@@ -5072,8 +5073,15 @@ const getPackagesPaths = async (rushRootPath) => {
 
 const getAllChanges = async ({ rushChangePath, packagePaths, options = {} }) => {
   // Identify changed packages from change logs
-  const changedPackages = await getPackagesFromChanges(rushChangePath)
-
+  var changedPackages = await getPackagesFromChanges(rushChangePath)
+  // Filter projects by version policy
+  console.log("versionPolicy: ", options.versionPolicy)
+  if (options.versionPolicy != undefined) {
+    const versionPolicyPackages = packagePaths.filter(project => project.packageVersionPolicy == options.versionPolicy).map(project => project.packageName)
+    console.log("versionPolicyPackages :", versionPolicyPackages)
+    changedPackages = changedPackages.filter(project => versionPolicyPackages.includes(project))
+    console.log("changedPackages: ", changedPackages)
+  }
   // Start off with the changed packages
   const allChanges = [...changedPackages]
 
@@ -5117,10 +5125,11 @@ const core = __nccwpck_require__(186)
 
 const changedProjects = __nccwpck_require__(361)
 
-async function run () {
+async function run() {
   try {
     const options = {
-      excludeDependantProjects: core.getInput('exclude-dependant-projects')
+      excludeDependantProjects: core.getInput('exclude-dependant-projects'),
+      versionPolicy: core.getInput('version-policy')
     }
     const changedProjectsArray = await changedProjects(options)
 
