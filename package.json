@@ -1,7 +1,7 @@
 {
   "name": "@advancedcsg/actions-rush-changed-projects",
   "version": "1.0.0",
-  "description": "Github ACtion RushJS Changed Projects",
+  "description": "Github Action RushJS Changed Projects",
   "main": "src/main.js",
   "scripts": {
     "lint": "standard src/**/*",
