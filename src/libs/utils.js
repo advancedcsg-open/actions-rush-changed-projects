@@ -45,7 +45,7 @@ const getAllChanges = async ({ rushChangePath, packagePaths, options = {} }) => 
   // Identify changed packages from change logs
   var changedPackages = await getPackagesFromChanges(rushChangePath)
   // Filter projects by version policy
-  if (options.versionPolicy != "") {
+  if (options.versionPolicy && options.versionPolicy != "") {
     console.log("versionPolicy :", options.versionPolicy)
     const versionPolicyPackages = packagePaths.filter(project => project.packageVersionPolicy == options.versionPolicy).map(project => project.packageName)
     console.log("versionPolicyPackages :", versionPolicyPackages)
