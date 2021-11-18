@@ -4925,8 +4925,8 @@ const { join } = __nccwpck_require__(622)
 const { getPackagesPaths, getAllChanges } = __nccwpck_require__(121)
 
 module.exports = async (options = {}) => {
-  const rushRootPath = join(process.cwd())
-  const rushChangePath = join(process.cwd(), 'common', 'changes')
+  const rushRootPath = join(process.cwd(), options.workingDirectory || '.')
+  const rushChangePath = join(process.cwd(), options.workingDirectory || '.', 'common', 'changes')
 
   const packagePaths = await getPackagesPaths(rushRootPath)
   const allChangedPackages = await getAllChanges({ rushChangePath, packagePaths, options })
@@ -5075,7 +5075,7 @@ const getAllChanges = async ({ rushChangePath, packagePaths, options = {} }) => 
   // Identify changed packages from change logs
   var changedPackages = await getPackagesFromChanges(rushChangePath)
   // Filter projects by version policy
-  if (options.versionPolicy != "") {
+  if (options.versionPolicy && options.versionPolicy != "") {
     console.log("versionPolicy :", options.versionPolicy)
     const versionPolicyPackages = packagePaths.filter(project => project.packageVersionPolicy == options.versionPolicy).map(project => project.packageName)
     console.log("versionPolicyPackages :", versionPolicyPackages)
@@ -5128,7 +5128,8 @@ async function run() {
   try {
     const options = {
       excludeDependantProjects: core.getInput('exclude-dependant-projects'),
-      versionPolicy: core.getInput('version-policy')
+      versionPolicy: core.getInput('version-policy'),
+      workingDirectory: core.getInput('working-directory')
     }
     const changedProjectsArray = await changedProjects(options)
 
