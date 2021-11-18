@@ -473,6 +473,7 @@
       "packageName": "@advanced/example-3",
       "projectFolder": "packages/example3",
       "reviewCategory": "production",
+      "versionPolicyName": "apps",
       "shouldPublish": true
     },
     {
