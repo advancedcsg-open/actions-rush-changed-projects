@@ -144,9 +144,10 @@ describe('utils', () => {
 
     // Files from changelogs
     expect(allChangedPackages).toContain('@advanced/example-1')
-
-    // Detected as a dependency that consumes a changed package
+    //Dependency of @advanced/example-1
     expect(allChangedPackages).toContain('@advanced/example-3')
+    //Dependency of @advanced/example-1 but its not a apps
+    expect(allChangedPackages).not.toContain('@advanced/example-2')
   })
   it('getAllChanges - versionPolicy = apps - excludeDependantProjects = true', async () => {
     const { getPackagesPaths, getAllChanges } = require('../../../src/libs/utils')
