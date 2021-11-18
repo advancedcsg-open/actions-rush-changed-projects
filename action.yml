@@ -15,6 +15,10 @@ inputs:
   version-policy:
     description: 'Version policy name'
     required: false
+  working-directory:
+    description: 'Specify the root directory for the rush configuration'
+    required: false
+    default: '.'
 outputs:
   changed-projects: # output will be available to future steps
     description: 'List of the changed projects. Contains the packageName of each project'

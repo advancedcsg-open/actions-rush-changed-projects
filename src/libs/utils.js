@@ -46,7 +46,6 @@ const getAllChanges = async ({ rushChangePath, packagePaths, options = {} }) => 
   const changedPackages = await getPackagesFromChanges(rushChangePath)
   // Start off with the changed packages
   var allChanges = [...changedPackages]
-
   // Exclude the dependant projects if specified. By default we include them
   if ((!options.excludeDependantProjects) || (options.excludeDependantProjects && options.excludeDependantProjects !== 'true')) {
     // Check through all rush packages

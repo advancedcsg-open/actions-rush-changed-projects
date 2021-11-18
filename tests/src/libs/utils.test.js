@@ -125,4 +125,46 @@ describe('utils', () => {
     // Detected as a dependency that consumes a changed package
     expect(allChangedPackages).not.toContain('@advanced/example-3')
   })
+
+  it('getAllChanges - versionPolicy = apps - excludeDependantProjects = false', async () => {
+    const { getPackagesPaths, getAllChanges } = require('../../../src/libs/utils')
+
+    const rushRootPath = join(__dirname, '..', '..', 'fixtures')
+    const rushChangePath = join(__dirname, '..', '..', 'fixtures', 'common', 'changes')
+
+    const options = {
+      excludeDependantProjects: 'false',
+      versionPolicy: 'apps'
+    }
+
+    const packagePaths = await getPackagesPaths(rushRootPath)
+    const allChangedPackages = await getAllChanges({ rushChangePath, packagePaths, options })
+
+    expect(allChangedPackages).toHaveLength(2)
+
+    // Files from changelogs
+    expect(allChangedPackages).toContain('@advanced/example-1')
+
+    // Detected as a dependency that consumes a changed package
+    expect(allChangedPackages).toContain('@advanced/example-3')
+  })
+  it('getAllChanges - versionPolicy = apps - excludeDependantProjects = true', async () => {
+    const { getPackagesPaths, getAllChanges } = require('../../../src/libs/utils')
+
+    const rushRootPath = join(__dirname, '..', '..', 'fixtures')
+    const rushChangePath = join(__dirname, '..', '..', 'fixtures', 'common', 'changes')
+
+    const options = {
+      excludeDependantProjects: 'true',
+      versionPolicy: 'apps'
+    }
+
+    const packagePaths = await getPackagesPaths(rushRootPath)
+    const allChangedPackages = await getAllChanges({ rushChangePath, packagePaths, options })
+
+    expect(allChangedPackages).toHaveLength(1)
+
+    // Files from changelogs
+    expect(allChangedPackages).toContain('@advanced/example-1')
+  })
 })
