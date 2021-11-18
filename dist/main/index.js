@@ -5073,9 +5073,9 @@ const getPackagesPaths = async (rushRootPath) => {
 
 const getAllChanges = async ({ rushChangePath, packagePaths, options = {} }) => {
   // Identify changed packages from change logs
-  var changedPackages = await getPackagesFromChanges(rushChangePath)
+  const changedPackages = await getPackagesFromChanges(rushChangePath)
   // Start off with the changed packages
-  const allChanges = [...changedPackages]
+  var allChanges = [...changedPackages]
 
   // Exclude the dependant projects if specified. By default we include them
   if ((!options.excludeDependantProjects) || (options.excludeDependantProjects && options.excludeDependantProjects !== 'true')) {
@@ -5098,7 +5098,7 @@ const getAllChanges = async ({ rushChangePath, packagePaths, options = {} }) => 
     }
   }
   // Filter projects by version policy
-  if (options.versionPolicy != "") {
+  if (options.versionPolicy && options.versionPolicy != "") {
     console.log("versionPolicy :", options.versionPolicy)
     const versionPolicyPackages = packagePaths.filter(project => project.packageVersionPolicy == options.versionPolicy).map(project => project.packageName)
     console.log("versionPolicyPackages :", versionPolicyPackages)
