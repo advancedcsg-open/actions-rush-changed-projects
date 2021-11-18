@@ -2,8 +2,8 @@ const { join } = require('path')
 const { getPackagesPaths, getAllChanges } = require('./libs/utils')
 
 module.exports = async (options = {}) => {
-  const rushRootPath = join(process.cwd())
-  const rushChangePath = join(process.cwd(), 'common', 'changes')
+  const rushRootPath = join(process.cwd(), options.workingDirectory || '.')
+  const rushChangePath = join(process.cwd(), options.workingDirectory || '.', 'common', 'changes')
 
   const packagePaths = await getPackagesPaths(rushRootPath)
   const allChangedPackages = await getAllChanges({ rushChangePath, packagePaths, options })

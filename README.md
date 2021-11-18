@@ -27,6 +27,11 @@ By default this is set to `false` and dependant projects are included.
 Filters the projects using given version policy.
 
 By default all the changed projects will be included.
+
+#### `working-directory`
+Specify the root directory for the rush configuration
+
+By default repository root will be considered.
 ### Outputs
 ---
 #### `changed-projects`

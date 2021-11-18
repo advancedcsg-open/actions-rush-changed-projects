@@ -6,7 +6,8 @@ async function run() {
   try {
     const options = {
       excludeDependantProjects: core.getInput('exclude-dependant-projects'),
-      versionPolicy: core.getInput('version-policy')
+      versionPolicy: core.getInput('version-policy'),
+      workingDirectory: core.getInput('working-directory')
     }
     const changedProjectsArray = await changedProjects(options)
 

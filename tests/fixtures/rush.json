@@ -460,6 +460,7 @@
       "packageName": "@advanced/example-1",
       "projectFolder": "packages/example1",
       "reviewCategory": "production",
+      "versionPolicyName": "apps",
       "shouldPublish": true
     },
     {
