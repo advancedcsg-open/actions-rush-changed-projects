@@ -27,7 +27,7 @@
   "homepage": "https://github.com/advancedcsg-open/actions-rush-changed-projects#readme",
   "dependencies": {
     "@actions/core": "^1.6.0",
-    "glob": "7.2.0"
+    "glob": "8.0.1"
   },
   "devDependencies": {
     "@vercel/ncc": "^0.31.1",
