@@ -26,7 +26,7 @@
   },
   "homepage": "https://github.com/advancedcsg-open/actions-rush-changed-projects#readme",
   "dependencies": {
-    "@actions/core": "^1.6.0",
+    "@actions/core": "^1.7.0",
     "glob": "7.2.0"
   },
   "devDependencies": {
