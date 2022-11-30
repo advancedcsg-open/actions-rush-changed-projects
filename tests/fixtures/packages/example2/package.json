@@ -20,8 +20,8 @@
     "src/**/*.js"
   ],
   "devDependencies": {
-    "jest": "27.2.1",
-    "standard": "16.0.3"
+    "jest": "^29.3.1",
+    "standard": "^17.0.0"
   },
   "jest": {
     "collectCoverage": true,
