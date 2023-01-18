@@ -76,7 +76,6 @@ const getAllChanges = async ({ rushChangePath, packagePaths, options = {} }) => 
   return allChanges
 }
 
-getPackagesFromChanges();
 module.exports = {
   readJsonFile,
   getPackagesFromChanges,
