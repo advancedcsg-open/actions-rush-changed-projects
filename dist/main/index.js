@@ -6201,7 +6201,7 @@ const getPackagesFromChanges = async (rushChangePath) => {
   const changedPackages = []
   for (const changeFilePath of changeFiles) {
     const changeRequest = await readJsonFile(changeFilePath)
-    if (!changedPackages.includes(changeRequest.packageName)) {
+    if (!changedPackages.includes(changeRequest.packageName) && changeRequest.changes[0].type !== 'none') {
       changedPackages.push(changeRequest.packageName)
     }
   }
