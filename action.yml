@@ -2,7 +2,7 @@ name: 'RushJS Identify Changed Projects Helper'
 author: Paul Mowat
 description: 'Github action for detecting changed projects using rush change files'
 runs:
-  using: 'node16'
+  using: 'node20'
   main: 'dist/main/index.js'
 branding:
   icon: 'check'
